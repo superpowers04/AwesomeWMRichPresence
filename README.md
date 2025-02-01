@@ -1,7 +1,7 @@
 # AwesomeWMRichPresence
 A really clunky way of doing discord rich presence
 This uses a lot of bad code and some really bad programming practices but it works for me so :shrug:
-Check the haxe branch for the haxe code
+Check the [haxe](https://github.com/superpowers04/AwesomeWMRichPresence/tree/haxe) branch for the haxe code
 
 # Requirements
 * Luvit installed and accessible from your $PATH
