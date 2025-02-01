@@ -105,6 +105,7 @@ function module.initDRP(state)
 	client.connect_signal("raised", module.updateDRP)
 
 	-- awful.spawn.easy_async_with_shell("",function()
+	module.inited=true
 	if(state ~= nil) then
 		module.toggleDRP(state,true)
 	else
@@ -112,7 +113,6 @@ function module.initDRP(state)
 			module.toggleDRP(true,true)
 		end
 	end
-	module.inited=true
 end
 -- end)
 return module
