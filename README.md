@@ -10,7 +10,7 @@ Check the haxe branch for the haxe code
 
 # Installation
 * Run `git clone https://github.com/superpowers04/AwesomeWMRichPresence` inside of your AwesomeWM config
-	(Running `cat ~/.config/awesome/AwesomeWMRichPresence/DRP.lua` should print the contents of the script in your terminal, the script expects to be installed there)
+	(Running `cat ~/.config/awesome/AwesomeWMRichPresence/DRP.lua` should print the contents of the script in your terminal, the script expects to be installed there or wherever `gears.filesystem.get_configuration_dir()` leads to)
 * Add `local DRP = require('AwesomeWMRichPresence.DRP')`
 * Add `DRP.initDRP()` Somewhere, like at the bottom of your rc.lua. DRP will NOT work until you do this
 * Add `DRP.toggleDRP` to your menu or something for a toggle, alternatively just pass true 

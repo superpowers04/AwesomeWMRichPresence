@@ -2,16 +2,26 @@
 -- A basic script that uses the window name of a program to set your Discord Rich Presence
 -- Check the readme.md
 
+-- Biolerplate stuff for importing things
+local gears,awful,naughty = require("gears"), require("awful"), require("naughty")
+
+--[[--------------
+	CONFIG
+------------------]]
+
 -- Replace 1201616832885444789 with whatever your Discord Rich Presence Application ID is. THIS HAS TO BE A STRING
 local APPID = "1201616832885444789"
+local _path = gears.filesystem.get_configuration_dir()
 --  The command that gets run when you turn on DRP.
-local process = 'xterm -e \'luvit "~/.config/awesome/AwesomeWMRichPresence/Luvit-FakeDRP.lua" "~/.config/awesome/AwesomeWMRichPresence/Haxe-FakeDRP" '..APPID..'\''
+local commandToRun = 'xterm -e \'luvit "'.._path..'/AwesomeWMRichPresence/Luvit-FakeDRP.lua" "'.._path..'/AwesomeWMRichPresence/Haxe-FakeDRP" '..APPID..'\''
 -- The program that gets killed when you disable DRP
-local DRPCommand = "FakeDRP" 
+local proccessToFind = "Haxe-FakeDRP" 
 -- The address used to communicate with the http server
 local DRP_ENDPOINT = 'http://localhost:7286/' 
 -- The command executed to update rich presence
 local command = 'bash -c \'curl -s %q\'' 
+-- Temp file used to keep the DRP state across Awesome restarts
+local TMPFILE = "/tmp/AWESOMEWM_DRPENABLED"
 
 -- Table consisting of Pattern > Function, function should return a valid string for the Haxe portion
 --  Valid strings are either a http styled "?KEY1=VALUE1&KEY2=VALUE2" or a "TITLE|FOOTER"
@@ -31,7 +41,6 @@ local pattToDRP = {
 
 -- Actual script
 local module = {}
-local gears,awful,naughty = require("gears"), require("awful"), require("naughty")
 enableDRP = false -- I'm too lazy to rewrite my workflow to make this specific to the module, sorry
 
 
@@ -76,13 +85,13 @@ function module.toggleDRP(state,skipSetup)
 		enableDRP = state
 	end
 	if(not skipSetup) then
-		awful.spawn.with_shell((enableDRP and 'touch' or 'rm') ..' /tmp/DRPENABLED')
-		local ranThing = io.popen("pidof " .. process,'r')
+		awful.spawn.with_shell((enableDRP and 'touch' or 'rm') ..' '..TMPFILE)
+		local ranThing = io.popen("pidof " .. proccessToFind,'r')
 		local pid = ranThing:read('*a')
 		ranThing:close()
 		if(pid == nil or not pid:find('%d')) then
 			if(enableDRP) then
-				awful.spawn(DRPCommand)
+				awful.spawn(commandToRun)
 			end
 			DRPNotify("Started")
 			return
@@ -109,7 +118,7 @@ function module.initDRP(state)
 	if(state ~= nil) then
 		module.toggleDRP(state,true)
 	else
-		if(gears.filesystem.file_readable('/tmp/DRPENABLED')) then
+		if(gears.filesystem.file_readable(TMPFILE)) then
 			module.toggleDRP(true,true)
 		end
 	end
